@@ -6,7 +6,7 @@ pipeline{
     stages{
         stage("Clone Code from GitHub"){
             steps{
-               git url: "https://github.com/ParthParmar2711/wanderlust", branch: "devops"
+               git url: "https://github.com/ParthParmar2711/wanderlusts", branch: "master"
             }
         }
         stage("SonarQube Quality Analysis"){
