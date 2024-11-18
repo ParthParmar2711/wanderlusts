@@ -36,7 +36,13 @@ pipeline{
         }
         stage("Deploy using Docker Compose"){
             steps{
+                sh "docker-compose down"
                 sh "docker-compose up -d"
+            }
+        }
+        stage("Restart Nginx") {
+            steps {
+                sh "docker exec nginx nginx -s reload"  
             }
         }
     }
