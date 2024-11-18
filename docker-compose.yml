@@ -1,20 +1,20 @@
 version: "3.8"
 services:
-  mongodb: 
+  mongodb:
     container_name: mongo
     image: mongo:latest
     volumes: 
       - ./backend/data:/data
-    expose: 
-      - "27017:27017"
+    expose:  
+      - "27017"
 
   backend:
     container_name: backend
     build: ./backend
     env_file: 
       - ./backend/.env.docker
-    expose: 
-      - "5000:5000"
+    expose:  
+      - "5000"
     depends_on:
       - mongodb
 
@@ -23,17 +23,36 @@ services:
     build: ./frontend
     env_file:
       - ./frontend/.env.sample
-    expose:
-      - "5173:5173"
+    expose:  
+      - "5173"
 
   redis:
     container_name: redis
     restart: unless-stopped
     image: redis:7.0.5-alpine
-    expose: 
+    expose:
       - "6379"
     depends_on:
       - mongodb
 
+  nginx:  
+    container_name: nginx
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf  
+    ports:
+      - "80:80"  
+      - "443:443"  
+    depends_on:
+      - frontend
+      - backend  
+    networks:
+      - default  
+
+networks:
+  default:
+    driver: bridge
+
 volumes:
   data:
+
