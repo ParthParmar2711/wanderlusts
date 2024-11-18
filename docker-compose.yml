@@ -5,7 +5,7 @@ services:
     image: mongo:latest
     volumes: 
       - ./backend/data:/data
-    ports: 
+    expose: 
       - "27017:27017"
 
   backend:
@@ -13,7 +13,7 @@ services:
     build: ./backend
     env_file: 
       - ./backend/.env.docker
-    ports: 
+    expose: 
       - "5000:5000"
     depends_on:
       - mongodb
@@ -23,7 +23,7 @@ services:
     build: ./frontend
     env_file:
       - ./frontend/.env.sample
-    ports:
+    expose:
       - "5173:5173"
 
   redis:
