@@ -42,7 +42,10 @@ pipeline{
         }
         stage("Restart Nginx") {
             steps {
-                sh "docker exec nginx nginx -s reload"  
+                script {
+                   sleep(time: 10, unit: 'SECONDS')
+                   sh "docker exec nginx nginx -s reload"  
+               } 
             }
         }
     }
