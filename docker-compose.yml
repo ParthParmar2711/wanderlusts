@@ -1,56 +1,64 @@
 version: "3.8"
 services:
-  mongodb:
+  mongodb: 
     container_name: mongo
     image: mongo:latest
     volumes: 
       - ./backend/data:/data
-    expose:  
-      - "27017"
+    ports: 
+      - "27017:27017"
+    networks:
+      - wanderlust-network
 
   backend:
     container_name: backend
     build: ./backend
     env_file: 
       - ./backend/.env.docker
-    expose:  
-      - "5000"
+    ports: 
+      - "5000:5000"
     depends_on:
       - mongodb
+    networks:
+      - wanderlust-network
 
   frontend:
     container_name: frontend
     build: ./frontend
     env_file:
       - ./frontend/.env.sample
-    expose:  
-      - "5173"
+    ports: 
+      - "5173:5173"
+    networks:
+      - wanderlust-network
 
   redis:
     container_name: redis
     restart: unless-stopped
     image: redis:7.0.5-alpine
-    expose:
+    expose: 
       - "6379"
     depends_on:
       - mongodb
+    networks:
+      - wanderlust-network
 
-  nginx:  
+  nginx:
     container_name: nginx
     image: nginx:latest
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
-      - "80:80"  
-      - "443:443"  
+      - "80:80"
+      - "443:443"
     depends_on:
       - frontend
-      - backend  
+      - backend
     networks:
-      - default  
+      - wanderlust-network
 
 networks:
-  default:
+  wanderlust-network:
     driver: bridge
 
 volumes:
